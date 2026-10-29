@@ -1,0 +1,23 @@
+.env
+.env.*
+!.env.example
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+build/
+dist/
+data/*
+!data/.gitkeep
+.DS_Store
+*.sqlite3*
+tutor-backup*.b64
+
+# Additional local runtime and development files
+*.log
+*.db
+*.db-*
+.coverage
+htmlcov/

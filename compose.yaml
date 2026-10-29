@@ -1,0 +1,25 @@
+services:
+  tutor:
+    build: .
+    init: true
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DATABASE_PATH: /app/data/tutor.sqlite3
+      HEARTBEAT_PATH: /app/data/heartbeat
+      BUDGET_DATABASE_PATH: /app/data/budget.sqlite3
+    volumes:
+      - tutor_data:/app/data
+    stop_grace_period: 30s
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  tutor_data:

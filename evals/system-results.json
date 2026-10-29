@@ -1,0 +1,397 @@
+{
+  "kind": "offline_system_eval",
+  "llm": "deterministic test double",
+  "mcp": "real stdio subprocess in integration/e2e tests",
+  "timestamp": "2026-10-28T16:29:38.853350+00:00",
+  "total": 77,
+  "passed": 77,
+  "failed": 0,
+  "cases": [
+    {
+      "name": "test_cost_accounts_for_cache_writes_long_context_and_reasoning",
+      "suite": "tests.test_budget",
+      "seconds": 0.004
+    },
+    {
+      "name": "test_shared_atomic_budget_prevents_parallel_overspend",
+      "suite": "tests.test_budget",
+      "seconds": 0.008
+    },
+    {
+      "name": "test_actual_cost_releases_unused_reserve_and_unknown_holds_it",
+      "suite": "tests.test_budget",
+      "seconds": 0.005
+    },
+    {
+      "name": "test_limit_resume_survives_restart_day_change_and_skill_switch",
+      "suite": "tests.test_budget",
+      "seconds": 0.017
+    },
+    {
+      "name": "test_doctor_reports_empty_key_without_api_call",
+      "suite": "tests.test_doctor",
+      "seconds": 0.002
+    },
+    {
+      "name": "test_doctor_sends_synthetic_profile_and_closes_model",
+      "suite": "tests.test_doctor",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_doctor_reports_translated_provider_error",
+      "suite": "tests.test_doctor",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_telegram_to_engine_to_real_mcp_to_sqlite",
+      "suite": "tests.test_e2e",
+      "seconds": 0.521
+    },
+    {
+      "name": "test_telegram_budget_button_resume_and_skill_switch",
+      "suite": "tests.test_e2e",
+      "seconds": 0.259
+    },
+    {
+      "name": "test_complete_learning_cycle",
+      "suite": "tests.test_engine",
+      "seconds": 0.015
+    },
+    {
+      "name": "test_wrong_answer_adds_targeted_practice",
+      "suite": "tests.test_engine",
+      "seconds": 0.012
+    },
+    {
+      "name": "test_final_work_requires_no_help",
+      "suite": "tests.test_engine",
+      "seconds": 0.015
+    },
+    {
+      "name": "test_bad_grading_and_provider_failure_preserve_state",
+      "suite": "tests.test_engine",
+      "seconds": 0.011
+    },
+    {
+      "name": "test_user_isolation_and_restart",
+      "suite": "tests.test_engine",
+      "seconds": 0.009
+    },
+    {
+      "name": "test_stale_callback_does_not_mutate",
+      "suite": "tests.test_engine",
+      "seconds": 0.01
+    },
+    {
+      "name": "test_invalid_budget[0 3]",
+      "suite": "tests.test_engine",
+      "seconds": 0.004
+    },
+    {
+      "name": "test_invalid_budget[121 1]",
+      "suite": "tests.test_engine",
+      "seconds": 0.004
+    },
+    {
+      "name": "test_invalid_budget[30 0]",
+      "suite": "tests.test_engine",
+      "seconds": 0.004
+    },
+    {
+      "name": "test_invalid_budget[30 8]",
+      "suite": "tests.test_engine",
+      "seconds": 0.004
+    },
+    {
+      "name": "test_invalid_budget[abc]",
+      "suite": "tests.test_engine",
+      "seconds": 0.005
+    },
+    {
+      "name": "test_invalid_budget[30]",
+      "suite": "tests.test_engine",
+      "seconds": 0.004
+    },
+    {
+      "name": "test_invalid_budget[30 -1]",
+      "suite": "tests.test_engine",
+      "seconds": 0.005
+    },
+    {
+      "name": "test_reset_requires_confirmation",
+      "suite": "tests.test_engine",
+      "seconds": 0.011
+    },
+    {
+      "name": "test_help_does_not_expose_reference_answer",
+      "suite": "tests.test_engine",
+      "seconds": 0.01
+    },
+    {
+      "name": "test_openai_responses_contract",
+      "suite": "tests.test_llm_telegram",
+      "seconds": 0.281
+    },
+    {
+      "name": "test_telegram_utf16_split",
+      "suite": "tests.test_llm_telegram",
+      "seconds": 0.002
+    },
+    {
+      "name": "test_dispatcher_private_chat_and_access_control",
+      "suite": "tests.test_llm_telegram",
+      "seconds": 0.011
+    },
+    {
+      "name": "test_real_mcp_roundtrip_and_restart",
+      "suite": "tests.test_mcp",
+      "seconds": 0.493
+    },
+    {
+      "name": "test_profile_shortcuts_back_and_stale_choices",
+      "suite": "tests.test_navigation",
+      "seconds": 0.011
+    },
+    {
+      "name": "test_continue_restores_current_task_without_regenerating",
+      "suite": "tests.test_navigation",
+      "seconds": 0.014
+    },
+    {
+      "name": "test_question_mode_survives_restart_and_switch_and_does_not_grade",
+      "suite": "tests.test_navigation",
+      "seconds": 0.015
+    },
+    {
+      "name": "test_cancel_question_returns_to_answer_and_model_failure_keeps_mode",
+      "suite": "tests.test_navigation",
+      "seconds": 0.013
+    },
+    {
+      "name": "test_telegram_navigation_entire_flow_with_buttons_and_real_mcp",
+      "suite": "tests.test_navigation",
+      "seconds": 0.3
+    },
+    {
+      "name": "test_sdk_failures_have_actionable_messages[401-invalid_api_key-authentication-API-\\u043a\\u043b\\u044e\\u0447]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.012
+    },
+    {
+      "name": "test_sdk_failures_have_actionable_messages[403-permission_denied-permission-\\u0437\\u0430\\u043f\\u0440\\u0435\\u0442\\u0438\\u043b \\u0434\\u043e\\u0441\\u0442\\u0443\\u043f]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.009
+    },
+    {
+      "name": "test_sdk_failures_have_actionable_messages[403-unsupported_country_region_territory-permission-\\u0440\\u0435\\u0433\\u0438\\u043e\\u043d\\u0430]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.008
+    },
+    {
+      "name": "test_sdk_failures_have_actionable_messages[403-model_access_denied-permission-\\u0432\\u044b\\u0431\\u0440\\u0430\\u043d\\u043d\\u043e\\u0439 \\u043c\\u043e\\u0434\\u0435\\u043b\\u0438]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.009
+    },
+    {
+      "name": "test_sdk_failures_have_actionable_messages[404-model_not_found-not_found-\\u043d\\u0435 \\u043d\\u0430\\u0448\\u0451\\u043b \\u0432\\u044b\\u0431\\u0440\\u0430\\u043d\\u043d\\u0443\\u044e \\u043c\\u043e\\u0434\\u0435\\u043b\\u044c]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.009
+    },
+    {
+      "name": "test_sdk_failures_have_actionable_messages[404-not_found-not_found-OPENAI_BASE_URL]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.009
+    },
+    {
+      "name": "test_sdk_failures_have_actionable_messages[400-unsupported_parameter-request_format-\\u0444\\u043e\\u0440\\u043c\\u0430\\u0442 \\u0437\\u0430\\u043f\\u0440\\u043e\\u0441\\u0430]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.008
+    },
+    {
+      "name": "test_sdk_failures_have_actionable_messages[429-insufficient_quota-quota-\\u043a\\u0432\\u043e\\u0442\\u0430]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.008
+    },
+    {
+      "name": "test_sdk_failures_have_actionable_messages[429-rate_limit_exceeded-rate_limit-\\u0447\\u0430\\u0441\\u0442\\u043e\\u0442\\u0443]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.009
+    },
+    {
+      "name": "test_sdk_failures_have_actionable_messages[503-unavailable-provider_unavailable-\\u0421\\u0431\\u043e\\u0439 \\u043d\\u0430 \\u0441\\u0442\\u043e\\u0440\\u043e\\u043d\\u0435]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.009
+    },
+    {
+      "name": "test_permission_denied_keeps_deadline_stage_and_reports_403",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.015
+    },
+    {
+      "name": "test_transport_failure_messages[APITimeoutError-timeout]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_transport_failure_messages[APIConnectionError-connection]",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_full_provider_error_logged_without_truncation_or_credentials",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.008
+    },
+    {
+      "name": "test_non_json_provider_response_and_request_id_logged",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.008
+    },
+    {
+      "name": "test_transport_traceback_includes_redacted_chained_cause",
+      "suite": "tests.test_provider_errors",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_notification_delivery_and_completion",
+      "suite": "tests.test_reminders",
+      "seconds": 0.052
+    },
+    {
+      "name": "test_blocked_user_disables_and_rate_limit_retries",
+      "suite": "tests.test_reminders",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_independent_skills_restore_pending_lesson_and_hints",
+      "suite": "tests.test_skills",
+      "seconds": 0.021
+    },
+    {
+      "name": "test_ownership_and_reset_only_selected_skill",
+      "suite": "tests.test_skills",
+      "seconds": 0.015
+    },
+    {
+      "name": "test_migration_preserves_old_plan_and_lesson",
+      "suite": "tests.test_skills",
+      "seconds": 0.005
+    },
+    {
+      "name": "test_skills_through_real_mcp_and_restart",
+      "suite": "tests.test_skills",
+      "seconds": 0.47
+    },
+    {
+      "name": "test_internal_rubric_is_hidden_from_student",
+      "suite": "tests.test_skills",
+      "seconds": 0.013
+    },
+    {
+      "name": "test_skill_catalog_pages_and_empty_draft_reuse",
+      "suite": "tests.test_skills",
+      "seconds": 0.018
+    },
+    {
+      "name": "test_optimistic_lock_and_reset",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.004
+    },
+    {
+      "name": "test_moscow_schedule",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_dst_spring_gap",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_invalid_schedule[25:00]",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_invalid_schedule[12:60]",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.0
+    },
+    {
+      "name": "test_invalid_schedule[12]",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.0
+    },
+    {
+      "name": "test_invalid_schedule[19:00 Nope]",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_invalid_schedule[19:00 UTC 0]",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_invalid_schedule[19:00 UTC 8]",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_invalid_schedule[19:00 UTC x]",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.001
+    },
+    {
+      "name": "test_invalid_schedule[19:00 UTC 1 extra]",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.0
+    },
+    {
+      "name": "test_claim_retry_snooze_and_disable",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.007
+    },
+    {
+      "name": "test_outage_skips_old_notification",
+      "suite": "tests.test_storage_schedule",
+      "seconds": 0.003
+    },
+    {
+      "name": "test_actual_usage_charged_once_before_output_validation",
+      "suite": "tests.test_usage_accounting",
+      "seconds": 0.011
+    },
+    {
+      "name": "test_budget_exhaustion_prevents_any_http_request",
+      "suite": "tests.test_usage_accounting",
+      "seconds": 0.007
+    },
+    {
+      "name": "test_unknown_usage_conservatively_keeps_reserve[True-False]",
+      "suite": "tests.test_usage_accounting",
+      "seconds": 0.009
+    },
+    {
+      "name": "test_unknown_usage_conservatively_keeps_reserve[False-True]",
+      "suite": "tests.test_usage_accounting",
+      "seconds": 0.01
+    },
+    {
+      "name": "test_invalid_success_response_is_logged_in_full[invalid_json]",
+      "suite": "tests.test_usage_accounting",
+      "seconds": 0.008
+    },
+    {
+      "name": "test_invalid_success_response_is_logged_in_full[incomplete]",
+      "suite": "tests.test_usage_accounting",
+      "seconds": 0.008
+    },
+    {
+      "name": "test_invalid_success_response_is_logged_in_full[missing_usage]",
+      "suite": "tests.test_usage_accounting",
+      "seconds": 0.008
+    }
+  ],
+  "limitation": "Does not measure GPT-6 Luna correctness or learning outcomes."
+}

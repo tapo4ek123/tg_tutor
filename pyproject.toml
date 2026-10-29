@@ -1,0 +1,36 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "skillpilot-tutor"
+version = "0.1.0"
+description = "Adaptive Telegram AI tutor with GPT-6 Luna and a real MCP integration"
+requires-python = ">=3.12"
+dependencies = [
+  "aiogram>=3.20,<4",
+  "mcp>=1.12,<2",
+  "openai>=2,<3",
+  "pydantic-settings>=2.8,<3",
+  "tzdata>=2025.2",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<10", "pytest-asyncio>=0.26,<2", "ruff>=0.11,<1"]
+
+[project.scripts]
+skillpilot = "tutor.main:main"
+
+[tool.setuptools.packages.find]
+include = ["tutor*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "ASYNC"]
