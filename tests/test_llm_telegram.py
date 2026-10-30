@@ -9,7 +9,7 @@ from openai import AsyncOpenAI
 
 from tutor.config import Settings
 from tutor.engine import TutorEngine
-from tutor.llm import OpenAITutor
+from tutor.llm import DeepSeekTutor
 from tutor.models import Diagnostic
 from tutor.telegram import build_dispatcher, chunks
 
@@ -17,12 +17,14 @@ from .fakes import FakeTutor
 from .test_engine import LocalTools
 
 
-async def test_openai_responses_contract():
+async def test_deepseek_responses_contract():
     import json
 
     seen = []
+    urls = []
 
     def respond(request):
+        urls.append(str(request.url))
         data = json.loads(request.content)
         seen.append(data)
         return httpx.Response(
@@ -32,7 +34,7 @@ async def test_openai_responses_contract():
                 "object": "response",
                 "created_at": 1,
                 "status": "completed",
-                "model": "gpt-6-luna",
+                "model": "deepseek-flash",
                 "usage": {
                     "input_tokens": 100,
                     "input_tokens_details": {"cached_tokens": 0},
@@ -63,16 +65,20 @@ async def test_openai_responses_contract():
             },
         )
 
-    model = OpenAITutor(Settings(openai_api_key="test-key"))
+    model = DeepSeekTutor(Settings(deepseek_api_key="test-key"))
     await model.client.close()
     model.client = AsyncOpenAI(
-        api_key="test-key", http_client=httpx.AsyncClient(transport=httpx.MockTransport(respond))
+        api_key="test-key",
+        base_url="https://api.deepseek.com",
+        http_client=httpx.AsyncClient(transport=httpx.MockTransport(respond)),
     )
     result = await model.generate("diagnostic", Diagnostic, {"goal": "Go"})
     assert len(result.questions) == 2
-    assert seen[0]["model"] == "gpt-6-luna"
+    assert urls == ["https://api.deepseek.com/responses"]
+    assert seen[0]["model"] == "deepseek-flash"
     assert seen[0]["text"]["format"]["strict"] is True
-    assert seen[0]["store"] is False
+    assert "store" not in seen[0]
+    assert "service_tier" not in seen[0]
     await model.close()
 
 

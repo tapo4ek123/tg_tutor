@@ -21,3 +21,4 @@ tutor-backup*.b64
 *.db-*
 .coverage
 htmlcov/
+evals/runs/*.tmp

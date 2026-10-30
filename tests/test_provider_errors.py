@@ -10,7 +10,7 @@ from openai import APIConnectionError, APITimeoutError, AsyncOpenAI
 
 from tutor.config import Settings
 from tutor.engine import TutorEngine
-from tutor.llm import ModelError, OpenAITutor
+from tutor.llm import DeepSeekTutor, ModelError
 from tutor.models import Diagnostic
 from tutor.provider_errors import provider_failure
 from tutor.telegram import build_dispatcher
@@ -20,7 +20,7 @@ from .test_llm_telegram import TelegramSession
 
 
 async def mocked_model(status, body, key="test-secret-key"):
-    model = OpenAITutor(Settings(openai_api_key=key))
+    model = DeepSeekTutor(Settings(deepseek_api_key=key))
     await model.client.close()
     model.client = AsyncOpenAI(
         api_key=key,
@@ -40,7 +40,7 @@ async def mocked_model(status, body, key="test-secret-key"):
         (403, "unsupported_country_region_territory", "permission", "региона"),
         (403, "model_access_denied", "permission", "выбранной модели"),
         (404, "model_not_found", "not_found", "не нашёл выбранную модель"),
-        (404, "not_found", "not_found", "OPENAI_BASE_URL"),
+        (404, "not_found", "not_found", "DEEPSEEK_BASE_URL"),
         (400, "unsupported_parameter", "request_format", "формат запроса"),
         (429, "insufficient_quota", "quota", "квота"),
         (429, "rate_limit_exceeded", "rate_limit", "частоту"),
@@ -140,7 +140,7 @@ async def test_full_provider_error_logged_without_truncation_or_credentials(capl
         assert error.value.diagnostics["id"] in message
         assert "http_status=403" in message
         assert '"operation": "diagnostic"' in message
-        assert '"model": "gpt-6-luna"' in message
+        assert '"model": "deepseek-flash"' in message
         assert marker in message and "policy blocked model access" in message
         assert "Traceback (most recent call last)" in message
         assert "PermissionDeniedError" in message

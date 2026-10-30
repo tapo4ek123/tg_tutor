@@ -6,7 +6,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from tutor.config import Settings
-from tutor.llm import ModelError, OpenAITutor
+from tutor.llm import DeepSeekTutor, ModelError
 from tutor.models import Diagnostic
 from tutor.provider_errors import format_diagnostics
 
@@ -14,16 +14,16 @@ from tutor.provider_errors import format_diagnostics
 async def check(settings: Settings) -> int:
     env_path = await asyncio.to_thread(Path(".env").resolve)
     print(f"Файл настроек: {env_path}")
-    url = urlsplit(settings.openai_base_url)
+    url = urlsplit(settings.deepseek_base_url)
     print(f"API host: {url.hostname}")
-    print(f"Модель: {settings.openai_model}")
-    for key in ("OPENAI_API_KEY", "OPENAI_BASE_URL", "OPENAI_MODEL"):
+    print(f"Модель: {settings.deepseek_model}")
+    for key in ("DEEPSEEK_API_KEY", "DEEPSEEK_BASE_URL", "DEEPSEEK_MODEL"):
         if key in os.environ:
             print(f"{key}: переменная окружения имеет приоритет над .env")
-    if not settings.openai_api_key.get_secret_value():
-        print("OPENAI_API_KEY пустой. Заполните .env в указанной папке или переменную окружения.")
+    if not settings.deepseek_api_key.get_secret_value():
+        print("DEEPSEEK_API_KEY пустой. Заполните .env в указанной папке или переменную окружения.")
         return 1
-    model = OpenAITutor(settings, timeout=20, max_retries=0)
+    model = DeepSeekTutor(settings, timeout=20, max_retries=0)
     try:
         result = await model.generate(
             "diagnostic",

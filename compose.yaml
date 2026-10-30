@@ -8,6 +8,7 @@ services:
       DATABASE_PATH: /app/data/tutor.sqlite3
       HEARTBEAT_PATH: /app/data/heartbeat
       BUDGET_DATABASE_PATH: /app/data/budget.sqlite3
+      EVAL_REPORT_DIR: /app/data/evals
     volumes:
       - tutor_data:/app/data
     stop_grace_period: 30s

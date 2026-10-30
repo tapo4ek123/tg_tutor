@@ -16,17 +16,19 @@ def ledger(tmp_path, clock=None):
     return BudgetLedger(Settings(_env_file=None, budget_database_path=tmp_path / "spend.db"), clock)
 
 
-def test_cost_accounts_for_cache_writes_long_context_and_reasoning(tmp_path):
+def test_deepseek_peak_cost_counts_cache_and_is_linear_for_long_context(tmp_path):
     budget = ledger(tmp_path)
     expected = (
-        Decimal(500) * Decimal(".1")
-        + Decimal(200) * Decimal(".01")
-        + Decimal(300) * Decimal(".125")
-        + Decimal(100) * Decimal(".5")
+        Decimal(800) * Decimal(".30")
+        + Decimal(200) * Decimal(".006")
+        + Decimal(100) * Decimal("1.20")
     ) / 1_000_000
-    assert budget.cost(1000, 100, cached=200, written=300) == units(expected)
-    assert budget.cost(300000, 100) == units(Decimal(".060075"))
-    assert budget.cost(1000, 100, service_tier="priority") == 2 * budget.cost(1000, 100)
+    assert budget.cost(1000, 100, cached=200) == units(expected)
+    assert budget.cost(300000, 100) == units(Decimal(".09012"))
+    with pytest.raises(ValueError):
+        budget.cost(100, 10, cached=101)
+    with pytest.raises(ValueError):
+        budget.cost(-1, 10)
 
 
 def test_shared_atomic_budget_prevents_parallel_overspend(tmp_path):
@@ -34,7 +36,7 @@ def test_shared_atomic_budget_prevents_parallel_overspend(tmp_path):
 
     def reserve():
         try:
-            return budget.reserve(units(Decimal(2)), "gpt-6-luna")
+            return budget.reserve(units(Decimal(2)), "deepseek-flash")
         except BudgetLimitError:
             return None
 
@@ -43,15 +45,15 @@ def test_shared_atomic_budget_prevents_parallel_overspend(tmp_path):
     assert sum(i is not None for i in ids) == 1
     assert Decimal(budget.status()["reserved_usd"]) == 2
     with pytest.raises(BudgetLimitError):
-        ledger(tmp_path).reserve(units(Decimal(2)), "gpt-6-luna")
+        ledger(tmp_path).reserve(units(Decimal(2)), "deepseek-flash")
 
 
 def test_actual_cost_releases_unused_reserve_and_unknown_holds_it(tmp_path):
     budget = ledger(tmp_path)
-    request = budget.reserve(units(Decimal(2)), "gpt-6-luna")
+    request = budget.reserve(units(Decimal(2)), "deepseek-flash")
     budget.settle(request, units(Decimal(".25")))
     assert Decimal(budget.status()["remaining_usd"]) == Decimal("2.75")
-    pending = budget.reserve(units(Decimal(2)), "gpt-6-luna")
+    pending = budget.reserve(units(Decimal(2)), "deepseek-flash")
     budget.settle(pending, None)
     assert Decimal(budget.status()["spent_usd"]) == Decimal("2.25")
     assert Decimal(budget.status()["estimated_usd"]) == 2
@@ -60,7 +62,7 @@ def test_actual_cost_releases_unused_reserve_and_unknown_holds_it(tmp_path):
 async def test_limit_resume_survives_restart_day_change_and_skill_switch(tmp_path):
     now = [datetime(2026, 10, 27, 20, 59, tzinfo=UTC)]
     budget = ledger(tmp_path, lambda: now[0])
-    paid = budget.reserve(units(Decimal(3)), "gpt-6-luna")
+    paid = budget.reserve(units(Decimal(3)), "deepseek-flash")
     budget.settle(paid, units(Decimal(3)))
 
     class BudgetedFake(FakeTutor):
@@ -69,7 +71,7 @@ async def test_limit_resume_survives_restart_day_change_and_skill_switch(tmp_pat
             self.budget = budget
 
         async def generate(self, *args):
-            reservation = self.budget.reserve(100, "gpt-6-luna")
+            reservation = self.budget.reserve(100, "deepseek-flash")
             self.budget.settle(reservation, 100)
             return await super().generate(*args)
 

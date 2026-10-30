@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "skillpilot-tutor"
 version = "0.1.0"
-description = "Adaptive Telegram AI tutor with GPT-6 Luna and a real MCP integration"
+description = "Adaptive Telegram AI tutor with DeepSeek V4.1 Flash and a real MCP integration"
 requires-python = ">=3.12"
 dependencies = [
   "aiogram>=3.20,<4",

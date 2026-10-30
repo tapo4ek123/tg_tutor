@@ -6,7 +6,7 @@ from aiogram import Bot
 
 from tutor.config import Settings
 from tutor.engine import TutorEngine
-from tutor.llm import OpenAITutor
+from tutor.llm import DeepSeekTutor
 from tutor.mcp_client import connect_tools
 from tutor.reminders import reminder_loop
 from tutor.telegram import build_dispatcher, set_commands
@@ -14,7 +14,7 @@ from tutor.telegram import build_dispatcher, set_commands
 
 async def run(settings: Settings) -> None:
     settings.validate_live()
-    model = OpenAITutor(settings)
+    model = DeepSeekTutor(settings)
     try:
         async with Bot(settings.telegram_bot_token.get_secret_value()) as bot:
             async with connect_tools(settings.database_path) as tools:

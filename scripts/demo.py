@@ -10,7 +10,7 @@ from tutor.mcp_client import connect_tools
 
 
 async def main():
-    print("OFFLINE DEMO: fixture-ответы, это НЕ результат GPT-6 Luna. MCP настоящий.\n")
+    print("OFFLINE DEMO: fixture-ответы, это НЕ результат DeepSeek V4.1 Flash. MCP настоящий.\n")
     with tempfile.TemporaryDirectory() as folder:
         path = Path(folder) / "demo.sqlite3"
         async with connect_tools(path) as tools:

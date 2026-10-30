@@ -81,12 +81,12 @@ async def test_telegram_budget_button_resume_and_skill_switch(tmp_path):
     budget = BudgetLedger(
         Settings(_env_file=None, budget_database_path=tmp_path / "budget.db"), lambda: now[0]
     )
-    reservation = budget.reserve(units(Decimal(3)), "gpt-6-luna")
+    reservation = budget.reserve(units(Decimal(3)), "deepseek-flash")
     budget.settle(reservation, units(Decimal(3)))
 
     class BudgetedTutor(FakeTutor):
         async def generate(self, *args):
-            hold = self.budget.reserve(100, "gpt-6-luna")
+            hold = self.budget.reserve(100, "deepseek-flash")
             self.budget.settle(hold, 100)
             return await super().generate(*args)
 

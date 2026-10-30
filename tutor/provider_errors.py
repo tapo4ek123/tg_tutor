@@ -85,13 +85,13 @@ def provider_failure(exc: Exception, *, api_key: str, context: dict | None = Non
         category = "connection"
         text = (
             "Не удалось соединиться с провайдером модели. "
-            "Проверьте сеть и OPENAI_BASE_URL на сервере бота."
+            "Проверьте сеть и DEEPSEEK_BASE_URL на сервере бота."
         )
     elif status == 401:
         category = "authentication"
         text = (
-            "Провайдер отклонил API-ключ. Проверьте OPENAI_API_KEY и соответствие "
-            "ключа выбранному OPENAI_BASE_URL. После изменения .env перезапустите бота."
+            "Провайдер отклонил API-ключ. Проверьте DEEPSEEK_API_KEY и соответствие "
+            "ключа выбранному DEEPSEEK_BASE_URL. После изменения .env перезапустите бота."
         )
     elif status == 403:
         category = "permission"
@@ -100,7 +100,7 @@ def provider_failure(exc: Exception, *, api_key: str, context: dict | None = Non
         elif "model" in hints:
             text = (
                 "Провайдер запретил доступ к выбранной модели. "
-                "Проверьте права API-ключа и доступность OPENAI_MODEL у провайдера."
+                "Проверьте права API-ключа и доступность DEEPSEEK_MODEL у провайдера."
             )
         else:
             text = (
@@ -119,11 +119,13 @@ def provider_failure(exc: Exception, *, api_key: str, context: dict | None = Non
     elif status == 404:
         category = "not_found"
         if "model" in hints:
-            text = "Провайдер не нашёл выбранную модель. Проверьте OPENAI_MODEL и права API-ключа."
+            text = (
+                "Провайдер не нашёл выбранную модель. Проверьте DEEPSEEK_MODEL и права API-ключа."
+            )
         else:
             text = (
-                "API вернул 404. Проверьте OPENAI_BASE_URL: нужен базовый адрес API "
-                "(например, с /v1), а шлюз должен поддерживать /responses."
+                "API вернул 404. Проверьте DEEPSEEK_BASE_URL: нужен базовый адрес API "
+                "(для DeepSeek — https://api.deepseek.com), нужен endpoint /responses."
             )
     elif status in (400, 405, 422, 501):
         category = "request_format"

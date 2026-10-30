@@ -10,7 +10,7 @@ from tutor.budget import BudgetLedger
 from tutor.config import Settings
 from tutor.provider_errors import ModelError, log_model_failure, provider_failure
 
-__all__ = ["ModelError", "OpenAITutor", "TutorModel"]
+__all__ = ["ModelError", "DeepSeekTutor", "TutorModel"]
 
 T = TypeVar("T", bound=BaseModel)
 
@@ -61,19 +61,19 @@ class TutorModel(Protocol):
     async def generate(self, kind: str, schema: type[T], payload: dict) -> T: ...
 
 
-class OpenAITutor:
+class DeepSeekTutor:
     def __init__(self, settings: Settings, *, timeout: float = 75, max_retries: int = 0):
-        if settings.openai_model != settings.llm_price_model:
+        if settings.deepseek_model != settings.llm_price_model:
             raise ValueError("Для выбранной модели настройте LLM_PRICE_MODEL и её тарифы в .env.")
         if max_retries:
             raise ValueError("Автоматические API retries отключены для соблюдения бюджета.")
-        self.model = settings.openai_model
+        self.model = settings.deepseek_model
         self.budget = BudgetLedger(settings)
-        self.effort = settings.openai_reasoning_effort
-        self._api_key = settings.openai_api_key.get_secret_value()
+        self.effort = settings.deepseek_reasoning_effort
+        self._api_key = settings.deepseek_api_key.get_secret_value()
         self.client = AsyncOpenAI(
             api_key=self._api_key,
-            base_url=settings.openai_base_url,
+            base_url=settings.deepseek_base_url,
             timeout=timeout,
             max_retries=max_retries,
         )
@@ -95,8 +95,6 @@ class OpenAITutor:
                 }
             },
             max_output_tokens=5000,
-            store=False,
-            service_tier="default",
         )
         reserved = await asyncio.to_thread(
             self.budget.reserve, self.budget.maximum_cost(request), self.model
@@ -137,8 +135,6 @@ class OpenAITutor:
                     result.usage.input_tokens,
                     result.usage.output_tokens,
                     getattr(details, "cached_tokens", 0) or 0,
-                    getattr(details, "cache_write_tokens", 0) or 0,
-                    getattr(result, "service_tier", None),
                 )
             except (ValueError, AttributeError, TypeError) as exc:
                 await asyncio.to_thread(self.budget.settle, reserved, None)

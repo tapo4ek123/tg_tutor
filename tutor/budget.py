@@ -124,61 +124,29 @@ class BudgetLedger:
                 ),
             )
 
-    def cost(
-        self,
-        input_tokens: int,
-        output_tokens: int,
-        cached: int = 0,
-        written: int = 0,
-        service_tier: str | None = None,
-    ) -> int:
-        if min(input_tokens, output_tokens, cached, written) < 0 or cached + written > input_tokens:
+    def cost(self, input_tokens: int, output_tokens: int, cached: int = 0) -> int:
+        """Token-based ceiling using Flash peak prices; reasoning is already in output."""
+        if min(input_tokens, output_tokens, cached) < 0 or cached > input_tokens:
             raise ValueError("Invalid token usage")
         s = self.settings
-        long_input, long_output = (
-            (Decimal(2), Decimal("1.5")) if input_tokens > 272000 else (Decimal(1), Decimal(1))
-        )
-        tiers = {
-            None: Decimal(1),
-            "default": Decimal(1),
-            "standard": Decimal(1),
-            "flex": Decimal("0.5"),
-            "batch": Decimal("0.5"),
-            "priority": Decimal(2),
-            "fast": Decimal(2),
-        }
-        if service_tier not in tiers:
-            raise ValueError("Unknown service tier")
-        value = (
+        return units(
             (
-                (
-                    (input_tokens - cached - written) * s.llm_input_usd_per_million
-                    + cached * s.llm_cached_usd_per_million
-                    + written * s.llm_cache_write_usd_per_million
-                )
-                * long_input
-                + output_tokens * s.llm_output_usd_per_million * long_output
+                (input_tokens - cached) * s.llm_input_usd_per_million
+                + cached * s.llm_cached_usd_per_million
+                + output_tokens * s.llm_output_usd_per_million
             )
             * s.llm_price_multiplier
-            * tiers[service_tier]
             / Decimal(1_000_000)
         )
-        return units(value)
 
     def maximum_cost(self, request: dict) -> int:
-        # Text-only BPE: UTF-8 bytes upper-bound tokens; allow extra schema/role framing.
+        # Text-only UTF-8 bound plus framing; assume no cache hits and peak prices.
         token_bound = len(json.dumps(request, ensure_ascii=False).encode("utf-8")) + 8192
         s = self.settings
-        expensive_input = max(
-            s.llm_input_usd_per_million,
-            s.llm_cache_write_usd_per_million,
-            s.llm_cached_usd_per_million,
-        )
-        li, lo = (Decimal(2), Decimal("1.5")) if token_bound > 272000 else (Decimal(1), Decimal(1))
-        return 2 * units(
+        return units(
             (
-                token_bound * expensive_input * li
-                + request["max_output_tokens"] * s.llm_output_usd_per_million * lo
+                token_bound * max(s.llm_input_usd_per_million, s.llm_cached_usd_per_million)
+                + request["max_output_tokens"] * s.llm_output_usd_per_million
             )
             * s.llm_price_multiplier
             / Decimal(1_000_000)

@@ -7,7 +7,7 @@ from openai import AsyncOpenAI
 
 from tutor.budget import BudgetLimitError, units
 from tutor.config import Settings
-from tutor.llm import ModelError, OpenAITutor
+from tutor.llm import DeepSeekTutor, ModelError
 from tutor.models import Diagnostic
 
 
@@ -20,7 +20,7 @@ async def model_with_response(body, *, simulate_timeout=False):
             raise httpx.ReadTimeout("fixture", request=request)
         return httpx.Response(200, json=body)
 
-    model = OpenAITutor(Settings(openai_api_key="test-only"))
+    model = DeepSeekTutor(Settings(deepseek_api_key="test-only"))
     await model.client.close()
     model.client = AsyncOpenAI(
         api_key="test-only",
@@ -36,8 +36,7 @@ def response(*, content=None, usage=True, status="completed"):
         "object": "response",
         "created_at": 1,
         "status": status,
-        "model": "gpt-6-luna",
-        "service_tier": "default",
+        "model": "deepseek-flash",
         "output": [
             {
                 "type": "message",
@@ -63,7 +62,7 @@ def response(*, content=None, usage=True, status="completed"):
     if usage:
         result["usage"] = {
             "input_tokens": 1000,
-            "input_tokens_details": {"cached_tokens": 200, "cache_write_tokens": 300},
+            "input_tokens_details": {"cached_tokens": 200},
             "output_tokens": 100,
             "output_tokens_details": {"reasoning_tokens": 40},
             "total_tokens": 1100,
@@ -77,9 +76,10 @@ async def test_actual_usage_charged_once_before_output_validation():
         with pytest.raises(ValueError):
             await model.generate("diagnostic", Diagnostic, {"goal": "Go"})
         assert len(calls) == 1
-        assert calls[0]["service_tier"] == "default"
+        assert "service_tier" not in calls[0]
+        assert "store" not in calls[0]
         # Hidden reasoning_tokens=40 is part of output_tokens=100; no double billing.
-        expected = model.budget.cost(1000, 100, 200, 300)
+        expected = model.budget.cost(1000, 100, 200)
         assert Decimal(model.budget.status()["spent_usd"]) == Decimal(expected) / 1_000_000_000
         assert Decimal(model.budget.status()["reserved_usd"]) == 0
     finally:

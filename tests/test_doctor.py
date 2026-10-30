@@ -9,10 +9,10 @@ async def test_doctor_reports_empty_key_without_api_call(monkeypatch, capsys):
     def forbidden(*args, **kwargs):
         raise AssertionError("An empty key must not cause an API request")
 
-    monkeypatch.setattr(doctor, "OpenAITutor", forbidden)
-    result = await doctor.check(Settings(_env_file=None, openai_api_key=""))
+    monkeypatch.setattr(doctor, "DeepSeekTutor", forbidden)
+    result = await doctor.check(Settings(_env_file=None, deepseek_api_key=""))
     assert result == 1
-    assert "OPENAI_API_KEY пустой" in capsys.readouterr().out
+    assert "DEEPSEEK_API_KEY пустой" in capsys.readouterr().out
 
 
 async def test_doctor_sends_synthetic_profile_and_closes_model(monkeypatch, capsys):
@@ -32,8 +32,8 @@ async def test_doctor_sends_synthetic_profile_and_closes_model(monkeypatch, caps
         async def close(self):
             self.closed = True
 
-    monkeypatch.setattr(doctor, "OpenAITutor", FakeModel)
-    result = await doctor.check(Settings(_env_file=None, openai_api_key="never-print-this-key"))
+    monkeypatch.setattr(doctor, "DeepSeekTutor", FakeModel)
+    result = await doctor.check(Settings(_env_file=None, deepseek_api_key="never-print-this-key"))
     output = capsys.readouterr().out
     assert result == 0
     assert "OK: API доступен" in output
@@ -58,8 +58,8 @@ async def test_doctor_reports_translated_provider_error(monkeypatch, capsys):
         async def close(self):
             pass
 
-    monkeypatch.setattr(doctor, "OpenAITutor", FailedModel)
-    result = await doctor.check(Settings(_env_file=None, openai_api_key="secret"))
+    monkeypatch.setattr(doctor, "DeepSeekTutor", FailedModel)
+    result = await doctor.check(Settings(_env_file=None, deepseek_api_key="secret"))
     output = capsys.readouterr().out
     assert result == 1
     assert "403" in output
